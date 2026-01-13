@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urja Gold | Admin Dashboard</title>
+    <style>
+        :root { 
+            --deep-blue: #0A192F; 
+            --gold: #D4AF37; 
+            --white: #ffffff; 
+            --light-bg: #f4f7f6;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--light-bg); 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+
+        /* --- LOGIN BOX STYLES --- */
+        #login-section { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 15px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            text-align: center; 
+            width: 100%;
+            max-width: 380px;
+            border-top: 5px solid var(--gold);
+        }
+
+        #login-section h2 { color: var(--deep-blue); margin-bottom: 20px; letter-spacing: 2px; }
+
+        input[type="password"] { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 15px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 1rem;
+        }
+
+        .btn-login { 
+            background: var(--deep-blue); 
+            color: var(--gold); 
+            border: none; 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .btn-login:hover { background: #112240; letter-spacing: 1px; }
+
+        /* --- DASHBOARD STYLES (HIDDEN UNTIL LOGIN) --- */
+        #admin-dashboard { 
+            display: none; 
+            width: 95%; 
+            max-width: 1200px; 
+            margin: 20px auto; 
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--deep-blue);
+            padding: 20px 30px;
+            border-radius: 12px;
+            color: var(--gold);
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-logout {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-logout:hover { background: var(--gold); color: var(--deep-blue); }
+
+        .sheet-container {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 2px solid var(--gold); /* Highlighted Border */
+            overflow: hidden;
+        }
+
+        .sheet-label {
+            display: block;
+            font-weight: bold;
+            color: var(--deep-blue);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        iframe {
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-section">
+        <h2 style="margin-top:0;">URJA GOLD<br><small style="font-size: 0.5em; color: #777;">MANAGEMENT PORTAL</small></h2>
+        <input type="password" id="passKey" placeholder="Enter Admin Password">
+        <button class="btn-login" onclick="validateAdmin()">ACCESS DASHBOARD</button>
+        <p style="font-size: 0.7rem; color: #999; margin-top: 15px;">Restricted Access Only</p>
+    </div>
+
+    <div id="admin-dashboard">
+        <div class="admin-header">
+            <h2 style="margin:0;">LIVE ORDER DATABASE</h2>
+            <button class="btn-logout" onclick="logout()">LOGOUT</button>
+        </div>
+
+        <div class="sheet-container">
+            <span class="sheet-label">Real-Time Google Sheets Sync:</span>
+            
+            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTYQdaMv-lvU1zlu2MWWv4UHEhmoDF5OdbhkTaAvYoc5zzuW3MEsVLkjqtOPO1d7HdDbOq-LH7KjijX/pubhtml?widget=true&amp;headers=false" 
+                    width="100%" 
+                    height="700">
+            </iframe>
+
+            </div>
+    </div>
+
+    <script>
+        // Set your secret admin password here
+        const ADMIN_PASSWORD = "1234"; 
+
+        function validateAdmin() {
+            const input = document.getElementById('passKey').value;
+            if (input === ADMIN_PASSWORD) {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('admin-dashboard').style.display = 'block';
+                document.body.style.alignItems = 'flex-start'; // Adjust layout for dashboard
+            } else {
+                alert("Incorrect password. Please try again.");
+            }
+        }
+
+        function logout() {
+            location.reload(); // Refreshes page to lock it again
+        }
+    </script>
+
+</body>
+</html>

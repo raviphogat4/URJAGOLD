@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Urja Gold</title>
+    <style>
+        :root { --deep-blue: #0A192F; --gold: #D4AF37; --white: #ffffff; --success: #27ae60; }
+        body { font-family: 'Arial', sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; }
+        .checkout-wrapper { max-width: 900px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 20px; }
+        .checkout-container { flex: 2; min-width: 300px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .order-summary { flex: 1; min-width: 300px; background: var(--deep-blue); color: white; padding: 25px; border-radius: 12px; height: fit-content; }
+        input, textarea { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        
+        .btn-confirm { 
+            background-color: var(--gold); color: var(--deep-blue); width: 100%; padding: 18px; 
+            border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; 
+            transition: 0.3s;
+        }
+        .btn-confirm:disabled { background-color: #ccc; cursor: not-allowed; }
+        
+        .success-msg { display: none; background: #d4edda; color: #155724; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center; font-weight: bold; }
+        .summary-item { display: flex; justify-content: space-between; margin: 10px 0; }
+        .total-row { border-top: 2px solid var(--gold); padding-top: 15px; font-size: 1.4rem; font-weight: bold; color: var(--gold); display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+
+<div class="checkout-wrapper">
+    <div class="checkout-container" id="form-box">
+        <h2>Delivery Details</h2>
+        <form id="orderForm">
+            <label>Full Name</label>
+            <input type="text" id="cust_name" required>
+            
+            <label>Mobile Number</label>
+            <input type="tel" id="cust_phone" required>
+            
+            <label>Full Address</label>
+            <textarea id="cust_address" rows="4" required></textarea>
+        </form>
+        <div id="status-msg" class="success-msg">✅ Order Placed Successfully! We will contact you soon.</div>
+    </div>
+
+    <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-item"><span>Urja Gold (1 Month)</span><span>₹1,499</span></div>
+        <div class="summary-item" style="color: #4cd137;"><span>Discount</span><span>- ₹500</span></div>
+        <div class="total-row"><span>Total</span><span>₹999</span></div>
+
+        <button type="button" id="submit-btn" class="btn-confirm" onclick="sendToGoogleSheets()">PLACE ORDER</button>
+    </div>
+</div>
+
+<script>
+    function sendToGoogleSheets() {
+        const btn = document.getElementById('submit-btn');
+        const name = document.getElementById('cust_name').value;
+        const phone = document.getElementById('cust_phone').value;
+        const address = document.getElementById('cust_address').value;
+
+        if (!name || !phone || !address) {
+            alert("Please fill in all details.");
+            return;
+        }
+
+        // Disable button to prevent multiple clicks
+        btn.disabled = true;
+        btn.innerText = "Processing...";
+
+        // REPLACE THE URL BELOW WITH YOUR ACTUAL GOOGLE WEB APP URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwe28uON4p2vADobCll_bx6iFZkpG2IsMUYRSRn9IVtbt_pmeI-gq36VaSNH7DUay4p1g/exec';
+
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors', 
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name, phone: phone, address: address })
+        })
+        .then(() => {
+            // Show Success Message
+            document.getElementById('orderForm').style.display = 'none';
+            document.getElementById('status-msg').style.display = 'block';
+            btn.innerText = "Order Placed";
+            console.log("Data sent to Google Sheets successfully.");
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            alert("Error saving data. Check your Internet or Script URL.");
+            btn.disabled = false;
+            btn.innerText = "PLACE ORDER";
+        });
+    }
+</script>
+
+</body>
+</html>
